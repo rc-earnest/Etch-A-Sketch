@@ -10,9 +10,7 @@ Option Compare Text
 Imports System.Media
 Imports System.Threading.Thread
 
-
 Public Class EtchASketch
-
     ' Class-level variables for shared resources
     Private _foreColor As Color = Color.Black
     Private _penWidth As Integer = 1
@@ -41,6 +39,8 @@ Public Class EtchASketch
         End Set
     End Property
 
+    'Subs ---------------------------------------------------------------------------------------------------------------------------------------------------
+
     ' Sub to draw on the picture box
     Sub DrawOnPictureBoxMouse(oldX As Integer, oldY As Integer, newX As Integer, newY As Integer)
         Dim g As Graphics = DrawingPictureBox.CreateGraphics
@@ -48,6 +48,90 @@ Public Class EtchASketch
         g.DrawLine(pen, oldX, oldY, newX, newY)
         g.Dispose()
     End Sub
+
+    ' Sub to draw graticules on the picture box
+    Sub DrawGraticules()
+        Dim pen As New Pen(Color.Black)
+        Dim g As Graphics = DrawingPictureBox.CreateGraphics
+        Dim yMax As Integer = DrawingPictureBox.Height
+        Dim xMax As Integer = DrawingPictureBox.Width
+        For i As Integer = 0 To 10
+            g.DrawLine(pen, CSng(xMax * (i / 10)), 0, CSng(xMax * (i / 10)), yMax)
+            g.DrawLine(pen, 0, CSng(yMax * (i / 10)), xMax, CSng(yMax * (i / 10)))
+        Next
+        g.Dispose()
+        pen.Dispose()
+    End Sub
+
+    ' Sub to draw a sine wave on the picture box
+    Sub DrawSinWave()
+        Dim g As Graphics = DrawingPictureBox.CreateGraphics
+        Dim pen As New Pen(Color.Red)
+        Dim ymax As Integer
+        Dim oldX, oldY, newY As Integer
+        Dim yOffset As Integer = DrawingPictureBox.Height \ 2
+        Dim degreesPerPoint As Double = 360 / DrawingPictureBox.Width
+
+        ymax = yOffset - 1
+        oldY = yOffset - 1
+        ymax *= -1
+        For x = 0 To DrawingPictureBox.Width - 1
+            newY = CInt(ymax * Math.Sin((Math.PI / 180) * (x * degreesPerPoint))) + yOffset
+            g.DrawLine(pen, oldX, oldY, x, newY)
+            oldX = x
+            oldY = newY
+        Next
+        g.Dispose()
+        pen.Dispose()
+    End Sub
+
+    ' Sub to draw a cosine wave on the picture box
+    Sub DrawCosWave()
+        Dim g As Graphics = DrawingPictureBox.CreateGraphics
+        Dim pen As New Pen(Color.Blue)
+        Dim ymax As Integer
+        Dim oldX, oldY, newY As Integer
+        Dim yOffset As Integer = DrawingPictureBox.Height \ 2
+        Dim degreesPerPoint As Double = 360 / DrawingPictureBox.Width
+
+        ymax = yOffset - 1
+        oldY = yOffset - 1
+        ymax *= -1
+        For x = 0 To DrawingPictureBox.Width - 1 ' Changed to Width -1
+            newY = CInt(ymax * Math.Cos((Math.PI / 180) * (x * degreesPerPoint))) + yOffset
+            g.DrawLine(pen, oldX, oldY, x, newY)
+            oldX = x
+            oldY = newY
+        Next
+        g.Dispose()
+        pen.Dispose()
+    End Sub
+
+    ' Sub to draw a tangent wave on the picture box
+    Sub DrawTanWave()
+        Dim g As Graphics = DrawingPictureBox.CreateGraphics
+        Dim pen As New Pen(Color.Green)
+        Dim ymax As Integer
+        Dim oldX, oldY, newY As Integer
+        Dim yOffset As Integer = DrawingPictureBox.Height \ 2
+        Dim degreesPerPoint As Double = 360 / DrawingPictureBox.Width
+
+        ymax = yOffset - 1
+        oldY = yOffset - 1
+        ymax *= -1
+        For x = 0 To DrawingPictureBox.Width - 1
+            newY = CInt(ymax * Math.Tan((Math.PI / 180) * (x * degreesPerPoint))) + yOffset
+            g.DrawLine(pen, oldX, oldY, x, newY)
+            oldX = x
+            oldY = newY
+        Next
+
+        g.Dispose()
+        pen.Dispose()
+    End Sub
+
+
+    'Handlers -----------------------------------------------------------------------------------------------------------------------------------------------
 
     ' Handles mouse events for drawing and displaying coordinates
     Private Sub DrawingPictureBox_MouseMove(sender As Object, e As MouseEventArgs) Handles DrawingPictureBox.MouseMove
@@ -123,9 +207,23 @@ Public Class EtchASketch
         _isDrawing = False
     End Sub
 
+    ' Handles the Draw Waveforms button and menu item clicks
+    Private Sub DrawWaveforms(sender As Object, e As EventArgs) Handles DrawWaveformsButton.Click, DrawWaveformsContextMenuItem.Click, DrawWaveformsTopMenuItem.Click
+        DrawingPictureBox.Refresh()
+        DrawGraticules()
+        DrawSinWave()
+        DrawCosWave()
+        DrawTanWave()
+    End Sub
 
     ' Handles the Exit button and menu item clicks
     Private Sub ExitApplication(sender As Object, e As EventArgs) Handles ExitButton.Click, ExitContextMenuItem.Click, ExitTopMenuItem.Click
         Me.Close()
     End Sub
+
+    Private Sub EtchASketch_Load(sender As Object, e As EventArgs) Handles Me.Load
+        SelectColorButton.ForeColor = Color.White
+        SelectColorButton.BackColor = Color.Black
+    End Sub
+
 End Class
