@@ -90,6 +90,14 @@ Public Class EtchASketch
             Dim result As DialogResult = colorDialog.ShowDialog()
             If result = DialogResult.OK Then
                 ForegroundColor = colorDialog.Color
+                ' Change the background color of the button:
+                SelectColorButton.BackColor = ForegroundColor
+                ' Change the text color of the button
+                If colorDialog.Color.GetBrightness > 0.4 Then
+                    SelectColorButton.ForeColor = Color.Black
+                Else
+                    SelectColorButton.ForeColor = Color.White
+                End If
             End If
         End Using
     End Sub
