@@ -220,7 +220,7 @@ Public Class EtchASketch
     Private Sub ExitApplication(sender As Object, e As EventArgs) Handles ExitButton.Click, ExitContextMenuItem.Click, ExitTopMenuItem.Click
         Me.Close()
     End Sub
-
+    ' Handles Color of background and forecolor of Set Color Button on load
     Private Sub EtchASketch_Load(sender As Object, e As EventArgs) Handles Me.Load
         SelectColorButton.ForeColor = Color.White
         SelectColorButton.BackColor = Color.Black
